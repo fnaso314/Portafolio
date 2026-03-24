@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Franco Gabriel Naso | Portfolio Técnico y Modelado 3D</title>
+
+    <!-- Fuentes de Google: Inter (Lectura) y JetBrains Mono (Toque Técnico) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+    <style>
+        /* Patrón arquitectónico mejorado para el Hero */
+        .bg-blueprint {
+            background-color: #0f172a;
+            /* slate-900 */
+            background-image:
+                linear-gradient(rgba(37, 99, 235, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(37, 99, 235, 0.1) 1px, transparent 1px),
+                linear-gradient(rgba(37, 99, 235, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(37, 99, 235, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px;
+            background-position: center center;
+            position: relative;
+        }
+
+        .bg-blueprint::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, transparent 0%, #0f172a 80%);
+            pointer-events: none;
+        }
+
+        /* Estilos personalizados para scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f8fafc;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Animaciones para scroll reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Utilidad para blur de cristal */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .glass-nav-dark {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(30, 41, 59, 0.8);
+        }
+    </style>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            blue: '#2563eb',    /* Modern tech blue */
+                            orange: '#f59e0b',  /* Amber/Warning color, more elegant than pure orange */
+                            dark: '#0f172a',    /* Slate 900 */
+                            gray: '#64748b',    /* Slate 500 */
+                            light: '#f8fafc'    /* Slate 50 */
+                        }
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-brand-light text-slate-800 font-sans antialiased selection:bg-brand-orange selection:text-white">
+
+    <!-- Navegación Fija -->
+    <nav class="fixed w-full z-50 top-0 transition-all duration-300 py-4" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center bg-white/90 backdrop-blur-md rounded-2xl shadow-sm border border-slate-200 px-6 py-3"
+                id="nav-container">
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="#inicio" class="text-xl font-bold text-slate-900 tracking-tighter flex items-center gap-2">
+                        <i data-lucide="hexagon" class="w-6 h-6 text-brand-blue"></i>
+                        FGN<span class="text-brand-orange">.</span>
+                    </a>
+                </div>
+
+                <!-- Menú Desktop -->
+                <div class="hidden md:flex space-x-8">
+                    <a href="#inicio"
+                        class="text-sm font-medium text-slate-600 hover:text-brand-blue transition-colors">Inicio</a>
+                    <a href="#sobre-mi"
+                        class="text-sm font-medium text-slate-600 hover:text-brand-blue transition-colors">Sobre Mí</a>
+                    <a href="#portfolio"
+                        class="text-sm font-medium text-slate-600 hover:text-brand-blue transition-colors">Portfolio</a>
+                    <a href="#experiencia"
+                        class="text-sm font-medium text-slate-600 hover:text-brand-blue transition-colors">Experiencia</a>
+                    <a href="#contacto"
+                        class="text-sm font-medium text-slate-600 hover:text-brand-blue transition-colors">Contacto</a>
+                </div>
+
+                <!-- Menú Mobile Botón -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-slate-600 hover:text-brand-blue focus:outline-none p-1">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menú Mobile Desplegable -->
+        <div id="mobile-menu" class="hidden md:hidden absolute w-full px-4 mt-2">
+            <div class="bg-white rounded-xl shadow-lg border border-slate-100 p-2 space-y-1">
+                <a href="#inicio"
+                    class="block px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-blue rounded-lg">Inicio</a>
+                <a href="#sobre-mi"
+                    class="block px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-blue rounded-lg">Sobre
+                    Mí</a>
+                <a href="#portfolio"
+                    class="block px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-blue rounded-lg">Portfolio</a>
+                <a href="#experiencia"
+                    class="block px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-blue rounded-lg">Experiencia</a>
+                <a href="#contacto"
+                    class="block px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-blue rounded-lg">Contacto</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sección Inicio (Hero) -->
+    <header id="inicio" class="relative pt-32 pb-32 flex items-center min-h-screen bg-blueprint overflow-hidden">
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+            <div class="max-w-3xl animate-fade-in-up">
+                <div
+                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/50 border border-slate-700 text-brand-orange font-mono text-xs mb-6 backdrop-blur-sm">
+                    <span class="w-2 h-2 rounded-full bg-brand-orange animate-pulse"></span>
+                    Portfolio Técnico 2026
+                </div>
+                <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold text-white tracking-tight mb-6">
+                    Franco Gabriel <br /><span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue to-blue-400">Naso</span>
+                </h1>
+
+                <div
+                    class="flex flex-wrap items-center gap-3 text-lg sm:text-xl text-slate-300 font-light mb-8 font-mono">
+                    <span class="flex items-center gap-2"><i data-lucide="pen-tool"
+                            class="w-5 h-5 text-brand-orange"></i> Dibujante CAD</span>
+                    <span class="hidden sm:inline text-slate-600">/</span>
+                    <span class="flex items-center gap-2"><i data-lucide="box" class="w-5 h-5 text-brand-orange"></i>
+                        Modelador 3D</span>
+                    <span class="hidden md:inline text-slate-600">/</span>
+                    <span class="flex items-center gap-2"><i data-lucide="hard-hat"
+                            class="w-5 h-5 text-brand-orange"></i> Ing. Civil (Est.)</span>
+                </div>
+
+                <p class="text-base sm:text-lg text-slate-400 mb-10 max-w-2xl leading-relaxed">
+                    Especializado en diseño técnico, documentación de proyectos, modelado tridimensional y control de
+                    calidad estructural. Transformando ideas complejas en planos precisos.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#portfolio"
+                        class="inline-flex items-center justify-center px-8 py-3.5 border border-transparent text-sm font-medium rounded-lg text-white bg-brand-blue hover:bg-blue-700 transition-all shadow-lg shadow-blue-900/30 hover:-translate-y-0.5">
+                        Ver Proyectos
+                    </a>
+                    <a href="./curriculumn/cv.pdf"
+                        class="inline-flex items-center justify-center px-8 py-3.5 border border-slate-600 text-sm font-medium rounded-lg text-white hover:bg-slate-800 hover:border-slate-400 transition-all hover:-translate-y-0.5 group">
+                        <i data-lucide="download"
+                            class="w-4 h-4 mr-2 group-hover:text-brand-orange transition-colors"></i>
+                        Descargar CV
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Icono de scroll -->
+        <div
+            class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-bounce text-slate-500">
+            <span class="text-xs font-mono mb-2">Scroll</span>
+            <i data-lucide="arrow-down" class="w-4 h-4"></i>
+        </div>
+    </header>
+
+    <!-- Sección Sobre Mí & Habilidades -->
+    <section id="sobre-mi" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center reveal">
+                <!-- Texto -->
+                <div>
+                    <div class="flex items-center gap-4 mb-6">
+                        <div
+                            class="h-12 w-12 rounded-xl bg-blue-50 flex items-center justify-center border border-blue-100">
+                            <i data-lucide="user" class="w-6 h-6 text-brand-blue"></i>
+                        </div>
+                        <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">Sobre Mí</h2>
+                    </div>
+
+                    <div class="prose prose-slate prose-lg">
+                        <p class="text-slate-600 leading-relaxed mb-6">
+                            Soy estudiante de Ingeniería Civil apasionado por el diseño estructural y la documentación
+                            técnica. Mi enfoque profesional se centra en la <strong>precisión de la información
+                                geométrica</strong>, la calidad del entregable y la resolución práctica de problemas
+                            constructivos.
+                        </p>
+                        <p class="text-slate-600 leading-relaxed">
+                            Destaco por mi capacidad para interpretar planos complejos, modelar entornos en 3D para
+                            previsualización y llevar a cabo un exhaustivo control de calidad en los procesos de dibujo
+                            técnico, garantizando que cada pieza y estructura cumpla con las normativas exigidas.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Habilidades / Stack -->
+                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 shadow-sm relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-brand-blue/5 rounded-bl-full -z-0"></div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-6 relative z-10">Stack Técnico</h3>
+
+                    <div class="space-y-6 relative z-10">
+                        <!-- Software -->
+                        <div>
+                            <p class="text-sm font-mono text-slate-500 mb-3 uppercase tracking-wider">Software</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span
+                                    class="px-3 py-1.5 bg-white border border-slate-200 shadow-sm rounded-md text-sm font-mono text-slate-700 flex items-center gap-2 hover:border-brand-blue transition-colors cursor-default">
+                                    <img src="https://images.seeklogo.com/logo-png/48/1/autocad-logo-png_seeklogo-482394.png"
+                                        class="w-4 h-4 opacity-70" alt="AutoCAD"> AutoCAD
+                                </span>
+                                <span
+                                    class="px-3 py-1.5 bg-white border border-slate-200 shadow-sm rounded-md text-sm font-mono text-slate-700 flex items-center gap-2 hover:border-brand-blue transition-colors cursor-default">
+                                    <img src="https://images.seeklogo.com/logo-png/53/1/autodesk-revit-icon-logo-png_seeklogo-538734.png"
+                                        class="w-4 h-4 opacity-70" alt="Revit"> Revit
+                                </span>
+                                <span
+                                    class="px-3 py-1.5 bg-white border border-slate-200 shadow-sm rounded-md text-sm font-mono text-slate-700 flex items-center gap-2 hover:border-brand-blue transition-colors cursor-default">
+                                    <img src="https://images.seeklogo.com/logo-png/28/1/sketchup-logo-png_seeklogo-282937.png"
+                                        class="w-4 h-4 opacity-70" alt="sketchup"> sketchup
+                                </span>
+                                <span
+                                    class="px-3 py-1.5 bg-white border border-slate-200 shadow-sm rounded-md text-sm font-mono text-slate-700 flex items-center gap-2 hover:border-brand-blue transition-colors cursor-default">
+                                    <img src="https://images.seeklogo.com/logo-png/61/1/autodesk-inventor-logo-png_seeklogo-617680.png"
+                                        class="w-4 h-4 opacity-70" alt="Inventor">Inventor
+                                </span>
+                                <span
+                                    class="px-3 py-1.5 bg-white border border-slate-200 shadow-sm rounded-md text-sm font-mono text-slate-700 flex items-center gap-2 hover:border-brand-blue transition-colors cursor-default">
+                                    <img src="https://images.seeklogo.com/logo-png/39/1/blender-logo-png_seeklogo-394263.png"
+                                        class="w-4 h-4 opacity-70" alt="Blender">Blender
+                                </span>
+                                <span
+                                    class="px-3 py-1.5 bg-white border border-slate-200 shadow-sm rounded-md text-sm font-mono text-slate-700 flex items-center gap-2 hover:border-brand-blue transition-colors cursor-default">
+                                    <img src="https://images.seeklogo.com/logo-png/53/1/lumion-logo-png_seeklogo-531002.png"
+                                        class="w-4 h-4 opacity-70" alt="Lumion">Lumion
+                                </span>
+                                <span
+                                    class="px-3 py-1.5 bg-white border border-slate-200 shadow-sm rounded-md text-sm font-mono text-slate-700 flex items-center gap-2 hover:border-brand-blue transition-colors cursor-default">
+                                    <img src="https://images.seeklogo.com/logo-png/48/1/autodesk-fusion-360-logo-png_seeklogo-482400.png"
+                                        class="w-4 h-4 opacity-70" alt="Fusion 360">Fusion 360
+                                </span>
+                                <span
+                                    class="px-3 py-1.5 bg-white border border-slate-200 shadow-sm rounded-md text-sm font-mono text-slate-700 flex items-center gap-2 hover:border-brand-blue transition-colors cursor-default">
+                                    <img src="https://images.seeklogo.com/logo-png/39/1/vray-logo-png_seeklogo-390093.png"
+                                        class="w-4 h-4 opacity-70" alt="vray">vray
+                                </span>
+                                <span
+                                    class="px-3 py-1.5 bg-white border border-slate-200 shadow-sm rounded-md text-sm font-mono text-slate-700 flex items-center gap-2 hover:border-brand-blue transition-colors cursor-default">
+                                    <img src="https://images.seeklogo.com/logo-png/38/1/adobe-photoshop-logo-png_seeklogo-380560.png"
+                                        class="w-4 h-4 opacity-70" alt="Photoshop">Photoshop
+                                </span>
+                                </span>
+                                <span
+                                    class="px-3 py-1.5 bg-white border border-slate-200 shadow-sm rounded-md text-sm font-mono text-slate-700 flex items-center gap-2 hover:border-brand-blue transition-colors cursor-default">
+                                    <img src="https://images.seeklogo.com/logo-png/38/1/adobe-illustrator-logo-png_seeklogo-380559.png"
+                                        class="w-4 h-4 opacity-70" alt="Photoshop"> Illustrator
+                                </span>
+                                </span>
+                                <span
+                                    class="px-3 py-1.5 bg-white border border-slate-200 shadow-sm rounded-md text-sm font-mono text-slate-700 flex items-center gap-2 hover:border-brand-blue transition-colors cursor-default">
+                                    <img src="https://images.seeklogo.com/logo-png/37/1/microsoft-excel-logo-png_seeklogo-370278.png"
+                                        class="w-4 h-4 opacity-70" alt="Excel"> Excel
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Competencias -->
+                        <div>
+                            <p class="text-sm font-mono text-slate-500 mb-3 uppercase tracking-wider">Competencias Clave
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span
+                                    class="px-3 py-1.5 bg-brand-orange/10 border border-brand-orange/20 text-brand-orange rounded-md text-sm font-medium flex items-center gap-2">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4"></i> Modelado 3D
+                                </span>
+                                <span
+                                    class="px-3 py-1.5 bg-brand-orange/10 border border-brand-orange/20 text-brand-orange rounded-md text-sm font-medium flex items-center gap-2">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4"></i> Renderizado
+                                </span>
+                                <span
+                                    class="px-3 py-1.5 bg-brand-orange/10 border border-brand-orange/20 text-brand-orange rounded-md text-sm font-medium flex items-center gap-2">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4"></i> Diseño Técnico
+                                </span>
+                                <span
+                                    class="px-3 py-1.5 bg-brand-orange/10 border border-brand-orange/20 text-brand-orange rounded-md text-sm font-medium flex items-center gap-2">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4"></i> Control de Calidad
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Portfolio -->
+    <section id="portfolio" class="py-24 bg-slate-50 border-y border-slate-200 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-4 tracking-tight">Portfolio Destacado</h2>
+                <p class="text-slate-600 max-w-2xl mx-auto text-lg">Selección de proyectos de dibujo técnico,
+                    documentación constructiva y renders tridimensionales.</p>
+            </div>
+
+            <!-- Filtros -->
+            <div class="flex justify-center flex-wrap gap-3 mb-12 reveal">
+                <button
+                    class="filter-btn active px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 bg-brand-dark text-white shadow-md shadow-slate-900/20"
+                    data-filter="all">Todos</button>
+                <button
+                    class="filter-btn px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 hover:text-slate-900 shadow-sm"
+                    data-filter="planos">Planos Técnicos</button>
+                <button
+                    class="filter-btn px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 hover:text-slate-900 shadow-sm"
+                    data-filter="3d">Modelado 3D</button>
+                <button
+                    class="filter-btn px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 hover:text-slate-900 shadow-sm"
+                    data-filter="info">Informes</button>
+                <button
+                    class="filter-btn px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 hover:text-slate-900 shadow-sm"
+                    data-filter="Render">Renders</button>
+                <button
+                    class="filter-btn px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 hover:text-slate-900 shadow-sm"
+                    data-filter="DG">Diseño Grafico</button>
+            </div>
+
+            <!-- Grid de Galería -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="portfolio-grid">
+                <!-- Se inyecta vía JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Experiencia -->
+    <section id="experiencia" class="py-24 bg-slate-50 border-t border-slate-200">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 reveal">
+            <div class="text-center mb-16">
+                <span class="text-brand-orange font-mono text-sm tracking-wider uppercase mb-2 block">CV Resumido</span>
+                <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-6 tracking-tight">Trayectoria Profesional
+                </h2>
+            </div>
+
+            <!-- Timeline Lineal Estilo Técnico -->
+            <div class="relative border-l-2 border-slate-200 ml-4 md:ml-6 space-y-10 pb-4">
+
+                <!-- Item 1 -->
+                <div class="relative pl-8 md:pl-12 group">
+                    <div
+                        class="absolute w-4 h-4 bg-brand-blue rounded-full -left-[9px] top-1.5 ring-4 ring-blue-100 group-hover:ring-blue-200 transition-all">
+                    </div>
+                    <div
+                        class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100 group-hover:border-slate-300 group-hover:shadow-md transition-all duration-300">
+                        <div class="flex flex-col md:flex-row md:items-start justify-between mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900">Sabores Express</h3>
+                                <p class="text-slate-500 font-mono text-sm mt-1">Colaborador Técnico</p>
+                            </div>
+                            <span
+                                class="inline-flex items-center px-3 py-1 mt-3 md:mt-0 rounded-full text-xs font-medium bg-brand-blue/10 text-brand-blue">
+                                Experiencia Técnica
+                            </span>
+                        </div>
+                        <p class="text-slate-600 leading-relaxed text-sm md:text-base">
+                            Me desempeño en el área de mantenimiento y obras, participando en relevamientos técnicos de
+                            instalaciones y en el desarrollo de soluciones para distintas plantas. Realizo planos
+                            técnicos y modelado 3D de piezas mecánicas, orientados a la fabricación de repuestos
+                            mediante tornería, asegurando precisión y viabilidad.
+                            Además, colaboro en la elaboración de anteproyectos, evaluando alternativas de diseño y
+                            optimización de espacios e instalaciones.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="relative pl-8 md:pl-12 group">
+                    <div
+                        class="absolute w-4 h-4 bg-slate-300 rounded-full -left-[9px] top-1.5 ring-4 ring-slate-100 group-hover:bg-brand-blue group-hover:ring-blue-100 transition-all">
+                    </div>
+                    <div
+                        class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100 group-hover:border-slate-300 group-hover:shadow-md transition-all duration-300">
+                        <div class="flex flex-col md:flex-row md:items-start justify-between mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900">Ludadel</h3>
+                                <p class="text-slate-500 font-mono text-sm mt-1">Área Técnica</p>
+                            </div>
+                            <span
+                                class="inline-flex items-center px-3 py-1 mt-3 md:mt-0 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
+                                Control y Normativa
+                            </span>
+                        </div>
+                        <p class="text-slate-600 leading-relaxed text-sm md:text-base">Desarrollé un rol integral
+                            combinando diseño técnico, control de calidad y soporte operativo. Elaboré planos y modelos
+                            3D para producción, asegurando precisión y claridad, y coordiné con ingeniería, producción y
+                            proveedores.
+                            En calidad, realicé inspecciones, detección de fallas y análisis de causas raíz,
+                            implementando acciones correctivas. También llevé el control diario de producción, generé
+                            reportes y colaboré en certificaciones.
+                            Como soporte, gestioné documentación, indicadores en Excel y control de versiones. Además,
+                            participé en la creación de manuales, renders y material visual, brindando soporte técnico
+                            al equipo.</p>
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="relative pl-8 md:pl-12 group">
+                    <div
+                        class="absolute w-4 h-4 bg-slate-300 rounded-full -left-[9px] top-1.5 ring-4 ring-slate-100 group-hover:bg-brand-blue group-hover:ring-blue-100 transition-all">
+                    </div>
+                    <div
+                        class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100 group-hover:border-slate-300 group-hover:shadow-md transition-all duration-300">
+                        <div class="flex flex-col md:flex-row md:items-start justify-between mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900">Vicali Muebles</h3>
+                                <p class="text-slate-500 font-mono text-sm mt-1">Dibujante / Renderista</p>
+                            </div>
+                            <span
+                                class="inline-flex items-center px-3 py-1 mt-3 md:mt-0 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
+                                Renders & Planimetría
+                            </span>
+                        </div>
+                        <p class="text-slate-600 leading-relaxed text-sm md:text-base">Lectura e interpretación de
+                            planos, diseño de despieces exactos para producción y validación de medidas para la
+                            fabricación de mobiliario.Renders de muestra para los clientes</p>
+                    </div>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="relative pl-8 md:pl-12 group">
+                    <div
+                        class="absolute w-4 h-4 bg-slate-300 rounded-full -left-[9px] top-1.5 ring-4 ring-slate-100 group-hover:bg-brand-blue group-hover:ring-blue-100 transition-all">
+                    </div>
+                    <div
+                        class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100 group-hover:border-slate-300 group-hover:shadow-md transition-all duration-300">
+                        <div class="flex flex-col md:flex-row md:items-start justify-between mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900">Grupo Alturas</h3>
+                                <p class="text-slate-500 font-mono text-sm mt-1">Dibujante Técnico</p>
+                            </div>
+                            <span
+                                class="inline-flex items-center px-3 py-1 mt-3 md:mt-0 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
+                                Documentación de Obra
+                            </span>
+                        </div>
+                        <p class="text-slate-600 leading-relaxed text-sm md:text-base">Trabajo intensivo con
+                            documentación técnica del sector construcción/arquitectura y modelado 3D y renderizado según
+                            requerimientos del cliente.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Contacto -->
+    <section id="contacto" class="py-24 bg-brand-dark text-white relative overflow-hidden">
+        <!-- Decoración de fondo técnico -->
+        <div
+            class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAzNHYtNGgtMnY0aC00djJoNHY0aDJ2LTRoNHYtMmgtNHptMC0zMFYwaC0ydjRoLTR2Mmg0djRoMnYtNGg0VjRoLTR6bS0zMCAwVjBoLTJ2NGgtNHYyaDR2NGgydi00aDRWNGgtNHptMCAzMHYtNGgtMnY0aC00djJoNHY0aDJ2LTRoNHYtMmgtNHoiIGZpbGw9IiMzYjgyZjYiIGZpbGwtb3BhY2l0eT0iMC4wNSIvPjwvZz48L3N2Zz4=')] opacity-50">
+        </div>
+
+        <div class="absolute top-0 right-0 -mr-20 -mt-20 opacity-5 pointer-events-none">
+            <i data-lucide="compass" class="w-96 h-96"></i>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 reveal">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                <!-- Info Contacto -->
+                <div>
+                    <h2 class="text-4xl font-bold mb-6 tracking-tight">¿Trabajamos Juntos?</h2>
+                    <p class="text-slate-400 mb-10 text-lg leading-relaxed max-w-md">
+                        Abierto a nuevas oportunidades laborales, proyectos freelance o consultas sobre diseño CAD,
+                        modelado 3D y documentación de obra.
+                    </p>
+
+                    <div class="space-y-8">
+                        <div class="flex items-start group">
+                            <div
+                                class="w-14 h-14 bg-slate-800/80 border border-slate-700 rounded-2xl flex items-center justify-center text-brand-blue group-hover:bg-brand-blue group-hover:border-brand-blue group-hover:text-white transition-all duration-300 shadow-lg">
+                                <i data-lucide="mail" class="w-6 h-6"></i>
+                            </div>
+                            <div class="ml-5">
+                                <p class="text-sm font-mono text-slate-400 mb-1">Email Profesional</p>
+                                <a href="mailto:francogabrielnaso@gmail.com"
+                                    class="text-lg font-medium text-slate-200 hover:text-white transition-colors">francogabrielnaso@gmail.com</a>
+                            </div>
+                        </div>
+                        <div class="flex items-start group">
+                            <div
+                                class="w-14 h-14 bg-slate-800/80 border border-slate-700 rounded-2xl flex items-center justify-center text-brand-blue group-hover:bg-brand-blue group-hover:border-brand-blue group-hover:text-white transition-all duration-300 shadow-lg">
+                                <i data-lucide="phone" class="w-6 h-6"></i>
+                            </div>
+                            <div class="ml-5">
+                                <p class="text-sm font-mono text-slate-400 mb-1">Teléfono / WhatsApp</p>
+                                <a href="tel:+541151468044"
+                                    class="text-lg font-medium text-slate-200 hover:text-white transition-colors">11-5146-8044</a>
+                            </div>
+                        </div>
+                        <div class="flex items-start group">
+                            <div
+                                class="w-14 h-14 bg-slate-800/80 border border-slate-700 rounded-2xl flex items-center justify-center text-brand-blue group-hover:bg-brand-blue group-hover:border-brand-blue group-hover:text-white transition-all duration-300 shadow-lg">
+                                <i data-lucide="map-pin" class="w-6 h-6"></i>
+                            </div>
+                            <div class="ml-5">
+                                <p class="text-sm font-mono text-slate-400 mb-1">Ubicación Base</p>
+                                <p class="text-lg font-medium text-slate-200">Merlo, Buenos Aires, Argentina</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 py-10 border-t border-slate-800 text-center">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col items-center">
+            <a href="#inicio" class="text-2xl font-bold text-white tracking-tighter mb-4 flex items-center gap-2">
+                <i data-lucide="hexagon" class="w-6 h-6 text-brand-blue"></i>
+                FGN<span class="text-brand-orange">.</span>
+            </a>
+            <p class="text-slate-500 text-sm mb-2">&copy; 2026 Franco Gabriel Naso. Todos los derechos reservados.</p>
+            <p class="text-slate-600 text-sm font-mono">Portfolio Técnico • Ingeniería Civil • Diseño CAD</p>
+        </div>
+    </footer>
+
+    <!-- Modal para Galería (Lightbox) -->
+    <div id="image-modal"
+        class="fixed inset-0 z-[100] bg-slate-950/95 backdrop-blur-sm hidden items-center justify-center opacity-0 transition-opacity duration-300">
+        <button id="close-modal"
+            class="absolute top-6 right-6 p-2 bg-white/10 rounded-full text-white hover:bg-brand-orange hover:text-white transition-colors border border-white/20">
+            <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+        <div class="relative w-full max-w-5xl px-4 flex flex-col items-center">
+            <img id="modal-img" src="" alt="Vista ampliada"
+                class="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl border border-slate-800">
+            <div class="mt-6 text-center">
+                <h3 id="modal-title" class="text-white font-bold text-xl mb-1"></h3>
+                <p id="modal-caption" class="text-brand-orange font-mono text-sm uppercase tracking-wider"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts de interactividad -->
+    <script>
+        lucide.createIcons();
+
+        // --- MENÚ MOBILE ---
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        menu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.add('hidden');
+            });
+        });
+
+        // --- NAVBAR SCROLL ---
+        const navContainer = document.getElementById('nav-container');
+        const navbar = document.getElementById('navbar');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navContainer.classList.remove('bg-white/90', 'mx-6', 'rounded-2xl', 'mt-4');
+                navContainer.classList.add('bg-white/95', 'rounded-none', 'border-x-0', 'border-t-0', 'w-full', 'max-w-full');
+                navbar.classList.remove('py-4');
+                navbar.classList.add('py-0');
+            } else {
+                navContainer.classList.add('bg-white/90', 'mx-6', 'rounded-2xl', 'mt-4');
+                navContainer.classList.remove('bg-white/95', 'rounded-none', 'border-x-0', 'border-t-0', 'w-full', 'max-w-full');
+                navbar.classList.add('py-4');
+                navbar.classList.remove('py-0');
+            }
+        });
+
+        // --- SCROLL REVEAL ---
+        function reveal() {
+            const reveals = document.querySelectorAll(".reveal");
+            reveals.forEach(el => {
+                const windowHeight = window.innerHeight;
+                const elementTop = el.getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) {
+                    el.classList.add("active");
+                }
+            });
+        }
+        window.addEventListener("scroll", reveal);
+        reveal();
+
+        // --- UTIL STL ---
+        function isSTL(file) {
+            return file.toLowerCase().endsWith('.stl');
+        }
+
+        function getSTLViewer(src) {
+            return `
+        <model-viewer 
+            src="${src}"
+            camera-controls
+            auto-rotate
+            auto-rotate-delay="1000"
+            rotation-per-second="20deg"
+            interaction-prompt="none"
+            shadow-intensity="1"
+            exposure="1.2"
+            environment-image="https://modelviewer.dev/shared-assets/environments/warehouse.hdr"
+            style="width:100%; height:100%; background: radial-gradient(circle at 50% 50%, #1e293b, #020617);"
+        >
+            <div slot="poster" class="w-full h-full flex items-center justify-center text-white text-xs">
+                Cargando modelo...
+            </div>
+        </model-viewer>
+        `;
+        }
+
+        // --- DATA ---
+        const portfolioData = [
+            { id: 0, title: "Informe reforma en planta de produccion para ubicacion de montacargas.", category: "info", images: ["img_portafolio/reforma/re1.jpg", "img_portafolio/reforma/re2.jpg", "img_portafolio/reforma/re3.jpg", "img_portafolio/reforma/re4.jpg", "img_portafolio/reforma/re5.jpg"], desc: "Informe técnico de reforma en planta industrial para la instalación de montacargas, incluyendo análisis del espacio disponible, viabilidad estructural y propuesta de optimización del flujo de materiales." },
+            { id: 1, title: "Engranaje", category: "planos", images: ["img_portafolio/Perno_de_arrastre .png"], desc: "Plano técnico de engranaje con especificaciones dimensionales, tolerancias y detalles constructivos para fabricación mecánica." },
+            { id: 2, title: "Eje 42 empamec", category: "planos", images: ["img_portafolio/Eje_de_Transmisión.png"], desc: "Plano técnico de eje de transmisión, con definición de cotas, ajustes y características necesarias para su mecanizado y montaje." },
+            { id: 3, title: "Perno de arrastre", category: "planos", images: ["img_portafolio/PERNO DE ARRASTRE.png"], desc: "Plano técnico de perno de arrastre con detalles de geometría, roscas y tolerancias para su correcta fabricación y funcionamiento." },
+            { id: 4, title: "Eje Picadora", category: "planos", images: ["img_portafolio/EJE Picadora de verdeo.png"], desc: "Plano técnico de eje para máquina picadora, incluyendo dimensiones críticas y especificaciones para su producción." },
+            { id: 5, title: "Manual heladeras Telefunken", category: "DG", images: ["img_portafolio/Portada manual heladeras.png", "img_portafolio/Portada manual heladeras2.png"], desc: "Desarrollo de manual técnico para heladeras, incluyendo instrucciones de uso, instalación y mantenimiento, con diseño gráfico claro y estructurado." },
+            { id: 6, title: "instructivo de armado de muebles", category: "DG", images: ["img_portafolio/instructivo de armado de muebles.png", "img_portafolio/instructivo de armado de muebles2.png", "img_portafolio/instructivo de armado de muebles3.png"], desc: "Elaboración de instructivos de armado de muebles con enfoque visual y técnico, facilitando la comprensión del proceso de ensamblaje." },
+            { id: 7, title: "proyeccion de linea", category: "planos", images: ["img_portafolio/proyeccion de linea.png"], desc: "Plano de proyección de línea con representación técnica precisa para interpretación y aplicación en procesos de fabricación." },
+            { id: 8, title: "Render mueble", category: "Render", images: ["img_portafolio/renders para fabricacion de mueble en oficina.png", "img_portafolio/mueble 2.png"], desc: "Renders de mobiliario orientados a visualización previa a fabricación, con enfoque en materiales, iluminación y presentación del producto final." },
+            { id: 9, title: "Informe ampliacion y cerramiento en expedicion", category: "info", images: ["img_portafolio/INFORME REFORMA SAN MIGUEL/INFORME REFORMA SAN MIGUEL(1).jpg", "img_portafolio/INFORME REFORMA SAN MIGUEL/INFORME REFORMA SAN MIGUEL(2).jpg", "img_portafolio/INFORME REFORMA SAN MIGUEL/INFORME REFORMA SAN MIGUEL(3).jpg", "img_portafolio/INFORME REFORMA SAN MIGUEL/INFORME REFORMA SAN MIGUEL(4).jpg", "img_portafolio/INFORME REFORMA SAN MIGUEL/INFORME REFORMA SAN MIGUEL(5).jpg", "img_portafolio/INFORME REFORMA SAN MIGUEL/INFORME REFORMA SAN MIGUEL(6).jpg", "img_portafolio/INFORME REFORMA SAN MIGUEL/INFORME REFORMA SAN MIGUEL(7).jpg", "img_portafolio/INFORME REFORMA SAN MIGUEL/INFORME REFORMA SAN MIGUEL(8).jpg", "img_portafolio/INFORME REFORMA SAN MIGUEL/INFORME REFORMA SAN MIGUEL(9).jpg", "img_portafolio/INFORME REFORMA SAN MIGUEL/INFORME REFORMA SAN MIGUEL(10).jpg"], desc: "Informe técnico de ampliación y cerramiento del área de expedición, diseñado bajo criterios de higiene y normativas aplicables a la industria alimenticia." },
+            { id: 10, title: "Realizacion de carteles para planta con Photoshop & Illusstrator", category: "DG", images: ["img_portafolio/carteleria/carteleria1.jpg", "img_portafolio/carteleria/carteleria2.jpg", "img_portafolio/carteleria/carteleria3.jpg"], desc: "Diseño y producción de cartelería industrial utilizando herramientas gráficas, orientada a señalización, seguridad y organización dentro de planta." },
+            { id: 11, title: "Modelado 3d de cubre cables para cocina electrica.", category: "3d", images: ["img_portafolio/modelado 3d/cocina.png"], desc: "Modelado 3D de pieza plástica para cocina eléctrica, desarrollado a partir de componente importado con el objetivo de su fabricación local." },
+            { id: 12, title: "Modelado 3d de eje reductor.", category: "3d", images: ["img_portafolio/modelado 3d/eje reductor.png"], desc: "Modelado 3D de eje reductor con criterios de fabricación mecánica, preparado para procesos de mecanizado en tornería." },
+            { id: 13, title: "Modelado 3d de eje de maquina picadora de verdeo .", category: "3d", images: ["img_portafolio/modelado 3d/eje picadora.png"], desc: "Modelado 3D de eje para máquina picadora de verdeo, con definición geométrica precisa para su posterior fabricación." }];
+
+        const grid = document.getElementById('portfolio-grid');
+
+        const categoryMap = {
+            planos: { label: "Plano Técnico", icon: "file-text" },
+            "3d": { label: "Modelado 3D", icon: "box" },
+            info: { label: "Informe", icon: "file" },
+            Render: { label: "Render", icon: "image" },
+            DG: { label: "Diseño Gráfico", icon: "palette" }
+        };
+
+        // --- RENDER GRID ---
+        function renderPortfolio(filter) {
+            grid.innerHTML = '';
+
+            const filteredData = filter === 'all'
+                ? portfolioData
+                : portfolioData.filter(item => item.category === filter);
+
+            filteredData.forEach(item => {
+                const meta = categoryMap[item.category] || { label: item.category, icon: "folder" };
+                const firstFile = item.images[0];
+
+                let mediaHTML = isSTL(firstFile)
+                    ? getSTLViewer(firstFile)
+                    : `<img src="${firstFile}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">`;
+
+                const card = document.createElement('div');
+                card.className = `group relative overflow-hidden rounded-2xl bg-white shadow-sm border border-slate-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer`;
+
+                card.innerHTML = `
+                <div class="aspect-[4/3] overflow-hidden relative">
+                    ${mediaHTML}
+                </div>
+                <div class="p-6">
+                    <span class="text-xs font-mono text-brand-orange mb-2 flex items-center gap-1">
+                        <i data-lucide="${meta.icon}" class="w-4 h-4"></i>
+                        ${meta.label}
+                    </span>
+                    <h3 class="text-xl font-bold">${item.title}</h3>
+                    <p class="text-sm text-slate-500">${item.desc}</p>
+                </div>
+            `;
+
+                card.addEventListener('click', () => openModal(item));
+                grid.appendChild(card);
+            });
+
+            lucide.createIcons();
+        }
+
+        renderPortfolio('all');
+
+        // --- FILTROS ---
+        const filterBtns = document.querySelectorAll('.filter-btn');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+
+                filterBtns.forEach(b => {
+                    b.classList.remove('bg-brand-dark', 'text-white');
+                    b.classList.add('bg-white', 'text-slate-600');
+                });
+
+                e.target.classList.add('bg-brand-dark', 'text-white');
+
+                renderPortfolio(e.target.dataset.filter);
+            });
+        });
+
+        // --- MODAL ---
+        const modal = document.getElementById('image-modal');
+        const modalContainer = document.querySelector('#image-modal .relative');
+        const modalTitle = document.getElementById('modal-title');
+        const modalCaption = document.getElementById('modal-caption');
+        const closeModalBtn = document.getElementById('close-modal');
+
+        let currentIndex = 0;
+        let currentImages = [];
+
+        function openModal(item) {
+            currentImages = item.images;
+            currentIndex = 0;
+
+            updateCarousel();
+
+            modalTitle.textContent = item.title;
+            modalCaption.textContent = categoryMap[item.category]?.label || item.category;
+
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function updateCarousel() {
+            const file = currentImages[currentIndex];
+
+            let content = isSTL(file)
+                ? `
+            <model-viewer 
+                src="${file}"
+                camera-controls
+                auto-rotate
+                rotation-per-second="10deg"
+                exposure="1.3"
+                shadow-intensity="1"
+                environment-image="https://modelviewer.dev/shared-assets/environments/warehouse.hdr"
+                style="width:100%; height:75vh; background: radial-gradient(circle, #0f172a, #020617); border-radius:12px;">
+            </model-viewer>`
+                : `<img src="${file}" class="max-w-full max-h-[80vh] object-contain rounded-lg">`;
+
+            modalContainer.querySelectorAll('img, model-viewer').forEach(el => el.remove());
+            modalContainer.insertAdjacentHTML('afterbegin', content);
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+            document.body.style.overflow = '';
+        }
+
+        closeModalBtn.addEventListener('click', closeModal);
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        // --- CARRUSEL ---
+        document.getElementById('prev-btn').addEventListener('click', () => {
+            if (currentImages.length > 1) {
+                currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+                updateCarousel();
+            }
+        });
+
+        document.getElementById('next-btn').addEventListener('click', () => {
+            if (currentImages.length > 1) {
+                currentIndex = (currentIndex + 1) % currentImages.length;
+                updateCarousel();
+            }
+        });
+    </script>
+    ```
+
+    <!-- BOTONES CARRUSEL -->
+    <button id="prev-btn" class="fixed left-6 top-1/2 -translate-y-1/2 z-[110] text-white text-3xl">‹</button>
+    <button id="next-btn" class="fixed right-6 top-1/2 -translate-y-1/2 z-[110] text-white text-3xl">›</button>
+
+    <script>
+        document.getElementById('prev-btn').addEventListener('click', () => {
+            if (currentImages.length > 1) {
+                currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+                updateCarousel();
+            }
+        });
+
+        document.getElementById('next-btn').addEventListener('click', () => {
+            if (currentImages.length > 1) {
+                currentIndex = (currentIndex + 1) % currentImages.length;
+                updateCarousel();
+            }
+        });
+    </script>
+</body>
+
+</html>
